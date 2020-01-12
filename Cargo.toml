@@ -1,0 +1,19 @@
+[package]
+name = "hidraw"
+version = "0.1.0"
+authors = ["Ted Mielczarek <ted@mielczarek.org>"]
+edition = "2018"
+
+[dependencies]
+rumble = "0.3.0"
+tokio-udev = "0.2.0"
+tokio = { version = "0.2.6", features = ["full"] }
+futures = "0.3.1"
+futures-util = "0.3.1"
+anyhow = "1.0.26"
+nix = "0.16.1"
+libc = "0.2.66"
+
+[patch.crates-io]
+# https://github.com/Smithay/udev-rs/pull/3
+udev = { git = "https://github.com/luser/udev-rs/", branch = "asref-osstr" }
