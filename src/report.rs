@@ -1,13 +1,11 @@
 #![allow(unused)]
 
 #[derive(Debug)]
-pub struct HidReportParserBuilder {
-}
+pub struct HidReportParserBuilder {}
 
 impl HidReportParserBuilder {
     pub fn new() -> HidReportParserBuilder {
-        HidReportParserBuilder {
-        }
+        HidReportParserBuilder {}
     }
 
     pub fn build(self) -> HidReportParser {
@@ -25,6 +23,7 @@ const AXIS_X: u8 = 0x30;
 const AXIS_Y: u8 = 0x31;
 const AXIS_Z: u8 = 0x32;
 const AXIS_RZ: u8 = 0x35;
+const MAX_BUTTONS: usize = 16;
 
 #[derive(Debug, Clone)]
 enum What {
@@ -54,6 +53,28 @@ struct HidReportItem {
     what: What,
 }
 
+#[derive(Debug)]
+pub struct AnalogStick {
+    pub x: f32,
+    pub y: f32,
+}
+
+#[derive(Debug)]
+pub struct Dpad {
+    pub left: bool,
+    pub up: bool,
+    pub right: bool,
+    pub down: bool,
+}
+
+#[derive(Debug)]
+pub struct GamepadInput {
+    pub left_stick: AnalogStick,
+    pub right_stick: AnalogStick,
+    pub dpad: Dpad,
+    pub buttons: [bool; MAX_BUTTONS],
+}
+
 #[derive(Debug, Clone)]
 pub struct HidReportParser {
     inputs: Vec<HidReportItem>,
@@ -61,9 +82,11 @@ pub struct HidReportParser {
 
 impl HidReportParser {
     pub fn len(&self) -> usize {
-        let bits = self.inputs.iter().fold(0, |sum, i| sum + match i.size {
-            Size::Bits(s) => s as usize,
-            Size::Bytes(s) => (s as usize) * 8,
+        let bits = self.inputs.iter().fold(0, |sum, i| {
+            sum + match i.size {
+                Size::Bits(s) => s as usize,
+                Size::Bytes(s) => (s as usize) * 8,
+            }
         });
         bits / 8
     }
@@ -74,13 +97,53 @@ impl HidReportParser {
 fn logitech_f310_parser() -> HidReportParser {
     HidReportParser {
         inputs: vec![
-            HidReportItem { size: Size::Bytes(1), what: What::Axis { usage: AXIS_X, min: 0, max: 255 } },
-            HidReportItem { size: Size::Bytes(1), what: What::Axis { usage: AXIS_Y, min: 0, max: 255 } },
-            HidReportItem { size: Size::Bytes(1), what: What::Axis { usage: AXIS_Z, min: 0, max: 255 } },
-            HidReportItem { size: Size::Bytes(1), what: What::Axis { usage: AXIS_RZ, min: 0, max: 255 } },
-            HidReportItem { size: Size::Bits(4), what: What::Dpad { min: 0, max: 7 } },
-            HidReportItem { size: Size::Bits(12), what: What::Buttons { from: 0x01, to: 0x0C } },
-            HidReportItem { size: Size::Bytes(2), what: What::Unknown },
+            HidReportItem {
+                size: Size::Bytes(1),
+                what: What::Axis {
+                    usage: AXIS_X,
+                    min: 0,
+                    max: 255,
+                },
+            },
+            HidReportItem {
+                size: Size::Bytes(1),
+                what: What::Axis {
+                    usage: AXIS_Y,
+                    min: 0,
+                    max: 255,
+                },
+            },
+            HidReportItem {
+                size: Size::Bytes(1),
+                what: What::Axis {
+                    usage: AXIS_Z,
+                    min: 0,
+                    max: 255,
+                },
+            },
+            HidReportItem {
+                size: Size::Bytes(1),
+                what: What::Axis {
+                    usage: AXIS_RZ,
+                    min: 0,
+                    max: 255,
+                },
+            },
+            HidReportItem {
+                size: Size::Bits(4),
+                what: What::Dpad { min: 0, max: 7 },
+            },
+            HidReportItem {
+                size: Size::Bits(12),
+                what: What::Buttons {
+                    from: 0x01,
+                    to: 0x0C,
+                },
+            },
+            HidReportItem {
+                size: Size::Bytes(2),
+                what: What::Unknown,
+            },
         ],
     }
 }

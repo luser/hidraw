@@ -6,14 +6,16 @@ edition = "2018"
 
 [dependencies]
 rumble = "0.3.0"
-tokio-udev = "0.2.0"
-tokio = { version = "0.2.6", features = ["full"] }
-futures = "0.3.1"
-futures-util = "0.3.1"
+tokio-udev = "0.7.0"
+tokio = { version = "1.11.0", features = ["full"] }
+futures = "0.3"
+futures-util = "0.3"
 anyhow = "1.0.26"
 nix = "0.16.1"
 libc = "0.2.66"
+env_logger = "0.10.0"
+log = "0.4.17"
 
 [patch.crates-io]
-# https://github.com/Smithay/udev-rs/pull/3
-udev = { git = "https://github.com/luser/udev-rs/", branch = "asref-osstr" }
+# https://github.com/jeandudey/tokio-udev/pull/18
+tokio-udev = { git = 'https://github.com/sjoerdsimons/tokio-udev/', rev = "058aea8c0a8ac77c7eacbf86bd564ef5ebc7bdf6" }
