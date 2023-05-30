@@ -7,6 +7,7 @@ use tokio::sync::mpsc;
 mod device;
 mod device_monitor;
 mod report;
+mod sdl_mapping;
 
 use device_monitor::{DeviceEvent, DeviceInfo};
 

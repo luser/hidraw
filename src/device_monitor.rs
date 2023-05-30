@@ -93,6 +93,9 @@ async fn get_device_info(device: &Device) -> Result<DeviceInfo> {
         // but it probably bears verification! In any event, the worst that's likely to happen
         // here is unicode replacement characters in the device name.
         .to_string_lossy();
+    // ID_VENDOR_ID
+    // ID_MODEL_ID
+    // ID_REVISION
     let mut id = None;
     let mut name = None;
     let mut serial = None;
