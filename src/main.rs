@@ -4,29 +4,22 @@ use log::{info, LevelFilter};
 use std::collections::HashMap;
 use tokio::sync::mpsc;
 
-mod device;
-mod device_monitor;
-mod report;
-mod sdl_mapping;
-
-use device_monitor::{DeviceEvent, DeviceInfo};
+use hidraw::device;
+use hidraw::device_monitor::{self, DeviceEvent, DeviceInfo};
 
 fn log_info(info: &DeviceInfo) {
     info!(
         "New device `{}` {:04x}:{:04x} on {:?} ({:?})",
         info.name, info.vendor_id, info.product_id, info.bus, info.device_node
     );
-    info!(
-        "HID descriptor is {} bytes: have parser: {}",
-        info.hid_descriptor.len(),
-        info.parser.is_some()
-    );
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
     Builder::new()
-        .filter_level(LevelFilter::Info)
+        .filter_level(LevelFilter::Debug)
+        .format_module_path(false)
+        .format_target(false)
         .parse_default_env()
         .init();
     info!("Starting");
